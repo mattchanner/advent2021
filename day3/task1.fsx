@@ -1,22 +1,11 @@
 open System
 open System.IO
 
-let dump what = 
-    printfn "%A" what
-    what
+#load "../Utils.fsx"
 
-let transpose a = 
-    a 
-    |> Seq.collect Seq.indexed
-    |> Seq.groupBy fst
-    |> Seq.map (snd >> Seq.map snd)
+open Utils
 
-let charsToString chars = 
-    Array.ofSeq chars |> String
-
-let binToInt bin = Convert.ToInt32(bin, 2)
-
-let lines = File.ReadAllLines("input.txt")
+let lines = read "input.txt"
 let entries = Array.length lines
 
 let counts = 

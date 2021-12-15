@@ -1,9 +1,9 @@
 open System.IO
 
-let dump what = 
-    printfn "%A" what
-    what
-    
+#load "../Utils.fsx"
+
+open Utils
+
 type Command =
    | Up of int
    | Down of int
@@ -29,7 +29,7 @@ let apply (state:State) (command:Command) =
 
 let initial = { h = 0; v = 0 }
 
-File.ReadAllLines(@"input.txt") 
+read "input.txt"
 |> Array.map parse
 |> Array.fold apply initial
 |> fun x -> x.h * x.v

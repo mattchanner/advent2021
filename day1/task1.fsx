@@ -1,10 +1,10 @@
 open System.IO
 
-let dump what = 
-    printfn "%A" what
-    what
+#load "../Utils.fsx"
 
-File.ReadAllLines(@"input.txt") 
+open Utils
+
+read "input.txt"
 |> Array.map int
 |> (Array.windowed 2)
 |> Array.filter (fun x -> x.[1] > x.[0])

@@ -1,10 +1,10 @@
 open System.IO
 
-let dump what = 
-    printfn "%A" what
-    what
+#load "../Utils.fsx"
 
-File.ReadAllLines(@"input.txt") 
+open Utils
+
+read "input.txt"
 |> Array.map int
 |> (Array.windowed 3)
 |> Array.map (fun x -> Array.fold (+) 0 x)
