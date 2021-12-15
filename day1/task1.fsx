@@ -10,4 +10,3 @@ File.ReadAllLines(@"input.txt")
 |> Array.filter (fun x -> x.[1] > x.[0])
 |> Array.length
 |> dump
-|> ignore
