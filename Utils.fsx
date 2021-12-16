@@ -15,5 +15,13 @@ let transpose a =
 
 let binToInt bin = Convert.ToInt32(bin, 2)
 
+let bitToChar bits = Array.map (fun bit -> if bit = 0 then '0' else '1') bits
+
 let charsToString chars = 
     Array.ofSeq chars |> String
+
+let dumpBinaryStrings arr = 
+    arr 
+    |> Array.map bitToChar 
+    |> Array.map charsToString 
+    |> dump
