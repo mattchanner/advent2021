@@ -7,11 +7,11 @@ let dump what =
     printfn "%A" what
     what
 
-let transpose a = 
+let pivotArray a = 
     a 
-    |> Seq.collect Seq.indexed
-    |> Seq.groupBy fst
-    |> Seq.map (snd >> Seq.map snd)
+    |> Array.collect Array.indexed
+    |> Array.groupBy fst
+    |> Array.map (snd >> Array.map snd)
 
 let binToInt bin = Convert.ToInt32(bin, 2)
 

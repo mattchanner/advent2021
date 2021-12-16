@@ -10,21 +10,20 @@ let entries = Array.length lines
 
 let counts = 
     lines
-    |> Seq.ofArray
-    |> Seq.map (fun x -> x.ToCharArray())
-    |> transpose
-    |> Seq.map (fun x -> Seq.filter (fun p -> p = '1') x |> Seq.length)
-    |> Seq.map (fun x -> (x, entries - x))
+    |> Array.map (fun x -> x.ToCharArray())
+    |> pivotArray
+    |> Array.map (fun x -> Array.filter (fun p -> p = '1') x |> Array.length)
+    |> Array.map (fun x -> (x, entries - x))
     
 let gamma = 
     counts 
-    |> Seq.map (fun x -> if (fst x) > (snd x) then '1' else '0') 
+    |> Array.map (fun x -> if (fst x) > (snd x) then '1' else '0') 
     |> charsToString 
     |> binToInt
 
 let epsilon = 
     counts 
-    |> Seq.map (fun x -> if (fst x) > (snd x) then '0' else '1') 
+    |> Array.map (fun x -> if (fst x) > (snd x) then '0' else '1') 
     |> charsToString 
     |> binToInt
 
@@ -33,4 +32,3 @@ epsilon |> dump
 
 gamma * epsilon |> dump
 
-IKeepForgettingMyPassword

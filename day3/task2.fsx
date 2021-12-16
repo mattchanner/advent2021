@@ -5,15 +5,7 @@ open System.IO
 
 open Utils
 
-let pivotArray a = 
-    a 
-    |> Array.collect Array.indexed
-    |> Array.groupBy fst
-    |> Array.map (snd >> Array.map snd)
-
-let binToInt bin = Convert.ToInt32(bin, 2)
-
-let lines = File.ReadAllLines("input.txt")
+let lines = read "input.txt"
 
 // The array of binary numbers (treated as an array or 0's and 1's)
 let ungrouped = 
@@ -34,28 +26,28 @@ let chooser arr f =
     let ones = len - zeros 
     f ones zeros
 
-let mcb arr = chooser arr (fun ones zeros -> 
-    if ones >= zeros then 1
-    else 0)
+// Most common value (0 or 1) in the array. If 0 and 1 are equally common, keep values with a 1
+let mcb arr = chooser arr (fun ones zeros -> if ones >= zeros then 1 else 0)
 
-let lcb arr = chooser arr (fun ones zeros ->
-    if ones >= zeros then 0
-    else 1)
+// Least common value (0 or 1) in the array. If 0and 1 are equally common, return 0
+let lcb arr = chooser arr (fun ones zeros -> if ones >= zeros then 0 else 1)
     
-let rec walk source func i =
+let rec filterSourceArray source func i =
     let pivot = pivotArray source
     let filtered = filterNumbers source i (func pivot.[i])    
-    if filtered.Length = 1 then filtered.[0]
-    else walk filtered func (i + 1)
+    if filtered.Length = 1 then 
+        filtered.[0]
+    else 
+        filterSourceArray filtered func (i + 1)
 
 let algorithm selector =
-    walk ungrouped selector 0 
+    filterSourceArray ungrouped selector 0 
     |> bitToChar 
     |> charsToString 
     |> binToInt
 
-let oxygenGeneratorRating = walk ungrouped mcb 0
-let co2ScrubberRating = walk ungrouped lcb 0
+let oxygenGeneratorRating = filterSourceArray ungrouped mcb 0
+let co2ScrubberRating = filterSourceArray ungrouped lcb 0
 
 let oxygen = algorithm mcb
 let co2 = algorithm lcb
