@@ -5,6 +5,7 @@ open System.Text
 #load "../Utils.fsx"
 
 open Utils
+
 let identity x = x
 
 let isComplete (board: int[,]) =
@@ -47,40 +48,39 @@ let parseBoardAt (array: string[]) line =
     let board = Array2D.zeroCreate<int> 5 5
     let mutable row = 0
     for i in line .. (line + 4) do
-        let cells = array.[i].Split(" ", StringSplitOptions.RemoveEmptyEntries) |> Array.map int
-        for x in 0 .. cells.Length - 1 do
-            board.[row, x] <- cells.[x]
-        row <- row+ 1
+        if array.Length > i then
+            let cells = array.[i].Split(" ", StringSplitOptions.RemoveEmptyEntries) |> Array.map int
+            for x in 0 .. cells.Length - 1 do
+                board.[row, x] <- cells.[x]
+            row <- row+ 1
     board
 
 let rec parseBoardMarkers (array: string[]) line (boards: int[,] list): int[,] list =
     if line >= array.Length then
-        printfn "%A" $"Returning boards {boards}\n\n"
         boards
     else
         let board = parseBoardAt array line
-        let boards = parseBoardMarkers array (line + 5) (board::boards)
-        printf $"Returning boards {boards}\n\n"
+        let boards = parseBoardMarkers array (line + 6) (board::boards)
         boards
 
-let playAll (answers: int[]) boards = 
-    let mutable matched = Array2D.zeroCreate<int> 0 0
-    let mutable answer = 0
-    for i in 0 .. answers.Length do
-        for board in boards do
-            if answer = 0 && play board (answers.[i]) then
-                matched <- board
-                answer <- answers.[i]
-    (remaining matched) * answer
+let winningBoards (answers: int[]) (boards: int[,] list) =
+    seq {
+        let mutableBoards = new ResizeArray<int[,]>(boards |> List.rev)
+        for answer in answers do
+            let iterCopy = mutableBoards.ToArray()         
+            for board in iterCopy do
+                if play board answer then
+                    mutableBoards.Remove(board) |> ignore
+                    yield ((remaining board) * answer)
+    }
 
-let lines = read (__SOURCE_DIRECTORY__  + "/input.txt")
+let lines = read (@"C:\Source\github\mattchanner\advent2021\day4\input.txt")
 
 let answers = lines.[0].Split(",", StringSplitOptions.RemoveEmptyEntries) |> Array.map int
 
-parseBoardMarkers lines 1 []
-|> playAll answers
+parseBoardMarkers lines 2 []
+|> winningBoards answers
+|> Seq.rev
+|> Seq.item 0
 |> dump
-
-
-
-
+|> ignore
