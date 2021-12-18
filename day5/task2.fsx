@@ -45,43 +45,21 @@ let maxY = commands |> Array.map maxYFromCommand |> Array.max
 
 let board = Array2D.zeroCreate<int> (maxX + 2) (maxY + 2)
 
-let (|Horizontal|_|) (command: Command) =
+let (|Coords|_|) (command: Command) =
     match (command.fromPos, command.toPos)  with
-    | (x1, y1), (x2, y2) when x1 = x2 
-        -> Some(x1, (min y1 y2), (max y1 y2))
-    | _ -> None
-
-let (|Vertical|_|) (command: Command) =
-    match (command.fromPos, command.toPos)  with
-    | (x1, y1), (x2, y2) when y1 = y2 
-        -> Some(y1, (min x1 x2), (max x1 x2))
-    | _ -> None
-
-let (|Diagonal|_|) (command: Command) =
-    match (command.fromPos, command.toPos)  with
-    | (x1, y1), (x2, y2) when y1 <> y2  && x1 <> x2
-        -> Some(((x1, y1), (x2, y2)))        
+    | (x1, y1), (x2, y2) when x1 = x2 || y1 = y2 -> Some((min x1 x2, min y1 y2), (max x1 x2, max y1 y2))
     | _ -> None
 
 let fill (command: Command) =
     match command with
-    | Horizontal(x, y1, y2) -> 
-        for y in y1 .. y2 do
-            board.[x, y] <- board.[x, y] + 1
-    | Vertical(y, x1, x2) ->
-        for x in x1 .. x2 do
-            board.[x, y] <- board.[x, y] + 1
-    | Diagonal((x1, y1), (x2, y2)) ->
-        let diff = abs (x1 - x2)
-        let xIncr = if x1 < x2 then 1 else -1
-        let yIncr = if y1 < y2 then 1 else -1
-        printf $"({x1},{y1})->({x2},{y2}) diff {diff} xincr {xIncr} yincr {yIncr}\n"
-        for i in 0 .. diff do
-            let x = x1 + (xIncr * i)
-            let y = y1 + (yIncr * i)
-            printfn $"{x}, {y}\n"
-            board.[x, y] <- board.[x, y] + 1
-        ()
+    | Coords((x1, y1), (x2, y2)) -> 
+        printf $"Line ({x1},{y1}) to ({x2},{y2})\n"
+        if x1 = x2 then            
+            for y in y1 .. y2 do
+                board.[x1, y] <- board.[x1, y] + 1
+        else
+            for x in x1 .. x2 do
+                board.[x, y1] <- board.[x, y1] + 1
     | _ -> ()
 
 commands |> Array.map fill
