@@ -7,6 +7,9 @@ let dump what =
     printfn "%A" what
     what
 
+let dumpf what =
+    File.WriteAllText(__SOURCE_DIRECTORY__ + "/out.txt", what.ToString())
+
 let pivotArray a = 
     a 
     |> Array.collect Array.indexed
