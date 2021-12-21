@@ -7,7 +7,7 @@ read (__SOURCE_DIRECTORY__ + "/input.txt" )
 |> Array.item 0
 |> fun c -> c.Split(",") 
 |> Array.map int 
-|> Array.iter (fun i -> Array.set school i ((Array.get school i) + 1l))
+|> Array.iter (fun i -> Array.set school i ((Array.get school i) + 1L))
 
 school |> dump
 let printDay day =

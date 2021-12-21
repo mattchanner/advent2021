@@ -75,11 +75,11 @@ let fill (command: Command) =
         let diff = abs (x1 - x2)
         let xIncr = if x1 < x2 then 1 else -1
         let yIncr = if y1 < y2 then 1 else -1
-        printf $"({x1},{y1})->({x2},{y2}) diff {diff} xincr {xIncr} yincr {yIncr}\n"
+       // printf $"({x1},{y1})->({x2},{y2}) diff {diff} xincr {xIncr} yincr {yIncr}\n"
         for i in 0 .. diff do
             let x = x1 + (xIncr * i)
             let y = y1 + (yIncr * i)
-            printfn $"{x}, {y}\n"
+            //printfn $"{x}, {y}\n"
             board.[x, y] <- board.[x, y] + 1
         ()
     | _ -> ()
